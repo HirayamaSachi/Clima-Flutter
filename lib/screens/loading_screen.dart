@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:clima/services/networkHelper.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'location.dart';
@@ -17,31 +18,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<Location> getCurrentPosition() async {
     Location location = Location();
     await location.getCurrentPosition();
-    return location;
+    NetworkHelper networkHelper=NetworkHelper(url: 'https://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&lon=${location.longitude}&appid=${apiKey}');
+    networkHelper.getData();
     }
 
-  void getData() async {
-    Location location = await getCurrentPosition();
-    var response = await http.get(Uri.parse(
-        'https://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&lon=${location.longitude}&appid=${apiKey}'));
-    if (response.statusCode==200) {
-      var data=jsonDecode(response.body);
-      double temp=data['main']['temp'];
-      int conditionNumber=data['weather'][0]['id'];
-      String cityName=data['name'];
-      print(temp);
-      print(conditionNumber);
-      print(cityName);
-      
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    getData();
+    getCurrentPosition();
   }
 
   @override
