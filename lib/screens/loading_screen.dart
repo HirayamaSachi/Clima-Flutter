@@ -18,10 +18,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<Location> getCurrentPosition() async {
     Location location = Location();
     await location.getCurrentPosition();
-    NetworkHelper networkHelper=NetworkHelper(url: 'https://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&lon=${location.longitude}&appid=${apiKey}');
+    NetworkHelper networkHelper = NetworkHelper(
+        url:
+            'https://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&lon=${location.longitude}&appid=${apiKey}');
     networkHelper.getData();
-    }
-
+  }
 
   @override
   void initState() {
