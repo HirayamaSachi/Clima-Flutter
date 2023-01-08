@@ -7,6 +7,8 @@ import 'location.dart';
 import 'package:http/http.dart' as http;
 import '../apiKey.dart';
 import 'dart:convert';
+import 'location_screen.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -20,8 +22,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
     await location.getCurrentPosition();
     NetworkHelper networkHelper = NetworkHelper(
         url:
-            'https://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&lon=${location.longitude}&appid=${apiKey}');
-    networkHelper.getData();
+            'https://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&lon=${location.longitude}&appid=${apiKey}&units=metric');
+    await networkHelper.getData();
+    Navigator.of(context).push(MaterialPageRoute(builder: (context){return LocationScreen(locationWeather:networkHelper.data);}));
   }
 
   @override
@@ -32,6 +35,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: Center(
+        child: SpinKitFadingCircle(
+          color: Colors.white,
+          size: 50.0,
+        ),
+      ),
+    );
   }
 }
