@@ -3,6 +3,7 @@ import 'package:clima/services/networkHelper.dart';
 import 'package:clima/services/weather.dart';
 import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
+import 'city_screen.dart';
 
 class LocationScreen extends StatefulWidget {
   LocationScreen({this.locationWeather});
@@ -33,14 +34,15 @@ class _LocationScreenState extends State<LocationScreen> {
         conditionNumber = 0;
         cityName = '';
         weatherIcon = 'error';
-        wheatherMessage='Unable to get weather data';
+        wheatherMessage = 'Unable to get weather data';
         return;
       }
       temp = weatherData['main']['temp'];
       conditionNumber = weatherData['weather'][0]['id'];
       cityName = weatherData['name'];
       weatherIcon = WeatherModel().getWeatherIcon(conditionNumber);
-              wheatherMessage="${WeatherModel().getMessage(temp.toInt())} in $cityName!";
+      wheatherMessage =
+          "${WeatherModel().getMessage(temp.toInt())} in $cityName!";
       // WeatherModel weatherModel=WeatherModel();
     });
   }
@@ -78,7 +80,17 @@ class _LocationScreenState extends State<LocationScreen> {
                     ),
                   ),
                   FlatButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      cityName = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CityScreen()));
+                      if (cityName != null) {
+                        var weatherData = await
+                            WeatherModel().getCityNamePosition(cityName);
+                        updateUI(weatherData);
+                      }
+                    },
                     child: Icon(
                       Icons.location_city,
                       size: 50.0,

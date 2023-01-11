@@ -1,15 +1,25 @@
+import 'package:clima/screens/city_screen.dart';
 import 'package:clima/screens/location.dart';
 import 'networkHelper.dart';
 import '../apiKey.dart';
 
 class WeatherModel {
+  String apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
   Future<dynamic> getLocationPosition() async {
-    String apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
     Location location = Location();
     await location.getCurrentPosition();
     NetworkHelper networkHelper = NetworkHelper(
         url:
             '$apiUrl?lat=${location.latitude}&lon=${location.longitude}&appid=${apiKey}&units=metric');
+    await networkHelper.getData();
+    return networkHelper.data;
+  }
+
+  Future<dynamic> getCityNamePosition(cityName) async {
+    Location location = Location();
+    await location.getCurrentPosition();
+    NetworkHelper networkHelper = NetworkHelper(
+        url: '$apiUrl?q=${cityName}&appid=${apiKey}&units=metric');
     await networkHelper.getData();
     return networkHelper.data;
   }
